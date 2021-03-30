@@ -3,76 +3,57 @@ const CustomError = require("../extensions/custom-error");
 class VigenereCipheringMachine {
   constructor(bool = true) {
     this.bool = bool;
-    console.log(bool);
   }
   libr = "ABADEFGIJKLMNOPQRSTUVWXYZ";
   encrypt(message, key) {
     console.log(message, "+", key);
-    if (arguments.length !== 2) {
-      throw new Error();
+    if (arguments.length < 2) {
+      throw new Error("");
     }
-    let libr = this.libr.split("");
-    let changeToNumbers = (str) => {
-      return str
-        .toUpperCase()
-        .split("")
-        .map((char) => {
-          if (libr.includes(char)) {
-            char = libr.indexOf(char);
-          }
-        });
-    };
-    while (message.length <= key.length) {
+    // делаем строку с ключом == по длине  шифруемой  строке
+    while (key.length <= message.length) {
       key += key;
     }
-    // заменяем символы соответсвующими цифрами
-    let arrMessage = changeToNumbers(message);
-    let arrKey = changeToNumbers(key);
-    //получаем итоговую криптограмму
-    let rezult = [],
-      curr;
-    for (let i = 0; i < arrMessage.length; i++) {
-      // if (Number.isInteger(arrMessage[i])) {
-      curr = arrMessage[i] + arrKey[i];
-      // }
-      curr > 26 ? (curr = curr - 26) : curr;
-      rezult = rezult.push(libr[curr]);
+    //приводим к верхнему регистру строку и ключ
+    key = key.slice(0, message.length + 1).toUpperCase();
+    message = message.toUpperCase();
+    let rezult = "";
+    //клеем посимвольно результирующую строк
+    for (let i = 0; i < message.length; i++) {
+      if (!this.libr.includes(message[i])) {
+        rezult += message[i];
+      } else {
+        let codeLettersMes = this.libr.indexOf(message[i]); //числовой код каждой буквы строки
+        let codeLettersKey = this.libr.indexOf(key[i]);
+        result += libr[(codeLettersMes + codeLettersKey) % 26];
+      }
     }
-    return this.bool ? rezult.join("") : rezult.reverse().join("");
+    console.log(result);
+    return this.bool ? rezult : rezult.split("").reverse().join("");
   }
 
   decrypt(message, key) {
-    if (arguments.length !== 2) {
-      throw new Error();
+    console.log(message, "+", key);
+    if (arguments.length < 2) {
+      throw new Error("");
     }
-    let libr = this.libr.split("");
-    let changeToNumbers = (str) => {
-      return str
-        .toUpperCase()
-        .split("")
-        .map((char) => {
-          if (libr.includes(char)) {
-            char = libr.indexOf(char);
-          }
-        });
-    };
-    while (message.length <= key.length) {
+    while (key.length <= message.length) {
       key += key;
     }
-    // заменяем символы соответсвующими цифрами
-    let arrMessage = changeToNumbers(message);
-    let arrKey = changeToNumbers(key);
-    //получаем итоговую криптограмму
-    let rezult = [],
-      curr;
-    for (i = 0; i < arrMessage.length; i++) {
-      if (Number.isInteger(arrMessage[i])) {
-        curr = arrMessage[i] - arrKey[i];
+    key = key.slice(0, message.length + 1).toUpperCase();
+    message = message.toUpperCase();
+    let rezult = "";
+    for (i = 0; i < message.length; i++) {
+      if (!this.libr.includes(message[i])) {
+        rezult += message[i];
+      } else {
+        let codeLettersMes = this.libr.indexOf(message[i]);
+        let codeLettersKey = this.libr.indexOf(key[i]);
+        result += libr[(codeLettersMes - codeLettersKey) % 26];
       }
-      curr < 0 ? (curr = curr + 26) : curr;
-      rezult = rezult.push(libr[curr]);
     }
-    return this.bool ? rezult.join("") : rezult.reverse().join("");
+    console.log(rezult);
+    return this.bool ? rezult : rezult.split("").reverse().join("");
   }
 }
 

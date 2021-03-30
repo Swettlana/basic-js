@@ -43,7 +43,7 @@ class VigenereCipheringMachine {
     key = key.slice(0, message.length + 1).toUpperCase();
     message = message.toUpperCase();
     let rezult = "";
-    for (i = 0; i < message.length; i++) {
+    for (let i = 0; i < message.length; i++) {
       if (!this.libr.includes(message[i])) {
         rezult += message[i];
       } else {

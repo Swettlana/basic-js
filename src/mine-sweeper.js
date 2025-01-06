@@ -23,9 +23,38 @@ const { NotImplementedError } = require("../extensions/index.js");
  *  [1, 1, 1]
  * ]
  */
+const getSumMine = (arr, indexForArr, indexCurrent) => {
+  let sum = 0;
+  let first = indexCurrent === 0 ? 0 : -1;
+  let last = indexCurrent === arr[0].length - 1 ? 1 : 2;
+  if (indexForArr !== 0) {
+    for (let k = first; k < last; k++) {
+      sum = arr[indexForArr - 1][indexCurrent + k] ? sum + 1 : sum;
+    }
+  }
+  if (indexForArr !== arr.length - 1) {
+    for (let k = first; k < last; k++) {
+      sum = arr[indexForArr + 1][indexCurrent + k] ? sum + 1 : sum;
+    }
+  }
+  if (indexCurrent !== 0) {
+    sum = arr[indexForArr][indexCurrent - 1] ? sum + 1 : sum;
+  }
+  if (indexCurrent !== arr[0].length - 1) {
+    sum = arr[indexForArr][indexCurrent + 1] ? sum + 1 : sum;
+  }
+  return sum;
+};
+
 function minesweeper(matrix) {
-  throw new NotImplementedError("Not implemented");
-  // remove line with error and write your code here
+  const newArr = [];
+  matrix.forEach((el, index, arr) => {
+    newArr.push([]);
+    el.forEach((el1, index1) => {
+      newArr[index][index1] = getSumMine(arr, index, index1);
+    });
+  });
+  return newArr;
 }
 
 module.exports = {
